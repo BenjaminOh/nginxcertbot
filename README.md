@@ -102,6 +102,34 @@ nginx/
 
 운영서버에서 기존 서비스들을 nginx 인프라에 연결하는 방법은 `OPERATION_SERVER_GUIDE.md`를 참고하세요.
 
+## Git 관리
+
+### 초기 설정
+```bash
+# Git 저장소 초기화
+git init
+
+# 원격 저장소 연결
+git remote add origin <repository-url>
+
+# 첫 커밋
+git add .
+git commit -m "Initial commit: nginx + certbot infrastructure"
+git push -u origin main
+```
+
+### 환경 변수 설정
+```bash
+# 환경 변수 파일 생성 (Git에 포함되지 않음)
+cd infrastructure/
+cp env.example .env
+nano .env  # 실제 값으로 수정
+```
+
+### 중요한 파일들
+- **포함**: 설정 템플릿, 스크립트, 문서
+- **제외**: 실제 환경 변수, SSL 인증서, 로그 파일
+
 ## 환경 변수 설정
 
 ### 필수 설정

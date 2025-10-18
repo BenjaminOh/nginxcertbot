@@ -70,10 +70,7 @@ cd ../scripts/
 log_step "3/6 기존 컨테이너들을 nginx 네트워크에 연결"
 
 # nginx 네트워크 이름 확인
-NGINX_NETWORK=$(docker compose -f ../infrastructure/docker-compose.prod.yml config --services | head -1 | xargs -I {} docker compose -f ../infrastructure/docker-compose.prod.yml config | grep -A 10 "networks:" | grep -v "networks:" | head -1 | awk '{print $1}' | sed 's/://')
-if [ -z "$NGINX_NETWORK" ]; then
-    NGINX_NETWORK="web-services-network"
-fi
+NGINX_NETWORK="infrastructure_web-services-network"
 
 log_info "nginx 네트워크: $NGINX_NETWORK"
 

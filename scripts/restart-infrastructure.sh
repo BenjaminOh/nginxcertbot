@@ -75,13 +75,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 # 현재 디렉토리 확인
-if [ ! -f "infrastructure/docker-compose.prod.yml" ]; then
+if [ ! -f "../infrastructure/docker-compose.prod.yml" ]; then
     log_error "nginx 프로젝트 루트에서 실행해주세요."
     exit 1
 fi
 
 # 환경 변수 파일 확인
-if [ ! -f "infrastructure/.env" ]; then
+if [ ! -f "../infrastructure/.env" ]; then
     log_error "infrastructure/.env 파일이 없습니다."
     log_info "infrastructure/env.example을 .env로 복사하고 설정해주세요."
     exit 1
@@ -108,7 +108,7 @@ log_info "nginx 인프라 재시작 시작..."
 
 # 1단계: 현재 상태 확인
 log_step "1/6 현재 상태 확인"
-cd infrastructure/
+cd ../infrastructure/
 
 # 실행 중인 컨테이너 확인
 RUNNING_CONTAINERS=$(docker compose -f docker-compose.prod.yml ps --services --filter "status=running" 2>/dev/null || echo "")

@@ -19,14 +19,14 @@ log_warn() {
 }
 
 # 현재 디렉토리 확인
-if [ ! -f "infrastructure/docker-compose.prod.yml" ]; then
+if [ ! -f "../infrastructure/docker-compose.prod.yml" ]; then
     echo "nginx 프로젝트 루트에서 실행해주세요."
     exit 1
 fi
 
 log_warn "nginx 인프라 빠른 재시작 (1-2초 다운타임)"
 log_info "서비스 중지 중..."
-cd infrastructure/
+cd ../infrastructure/
 docker compose -f docker-compose.prod.yml down
 
 log_info "서비스 시작 중..."

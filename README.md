@@ -29,8 +29,14 @@ nginx/
 │   └── scripts/             # 서비스 관리 스크립트
 │       ├── add-service.sh
 │       └── remove-service.sh
+├── scripts/                 # 인프라 관리 스크립트
+│   ├── switch-to-production.sh
+│   ├── restart-infrastructure.sh
+│   ├── quick-restart.sh
+│   └── connect-existing-services.sh
 ├── DEPLOYMENT.md            # 기본 배포 가이드
 ├── MULTI_PROJECT_DEPLOYMENT.md  # 멀티 프로젝트 배포 가이드
+├── OPERATION_SERVER_GUIDE.md    # 운영서버 배포 가이드
 └── README.md
 ```
 
@@ -60,36 +66,36 @@ nginx/
 
 ### 빠른 재시작 (1-2초 다운타임)
 ```bash
-./quick-restart.sh
+./scripts/quick-restart.sh
 ```
 
 ### 완전 재시작 (옵션 포함)
 ```bash
 # 기본 재시작
-./restart-infrastructure.sh
+./scripts/restart-infrastructure.sh
 
 # 이미지 재빌드 후 시작
-./restart-infrastructure.sh --rebuild
+./scripts/restart-infrastructure.sh --rebuild
 
 # 빠른 재시작 (재빌드 없음)
-./restart-infrastructure.sh --quick
+./scripts/restart-infrastructure.sh --quick
 
 # 확인 없이 강제 실행
-./restart-infrastructure.sh --force
+./scripts/restart-infrastructure.sh --force
 
 # 도움말
-./restart-infrastructure.sh --help
+./scripts/restart-infrastructure.sh --help
 ```
 
 ### 테스트 → 프로덕션 전환
 ```bash
-./switch-to-production.sh
+./scripts/switch-to-production.sh
 ```
 
 ### 기존 서비스 연결 (운영서버용)
 ```bash
 # 운영서버에서 기존 서비스들을 nginx에 연결
-./connect-existing-services.sh
+./scripts/connect-existing-services.sh
 ```
 
 ## 운영서버 배포

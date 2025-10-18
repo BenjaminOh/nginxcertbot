@@ -86,6 +86,16 @@ nginx/
 ./switch-to-production.sh
 ```
 
+### 기존 서비스 연결 (운영서버용)
+```bash
+# 운영서버에서 기존 서비스들을 nginx에 연결
+./connect-existing-services.sh
+```
+
+## 운영서버 배포
+
+운영서버에서 기존 서비스들을 nginx 인프라에 연결하는 방법은 `OPERATION_SERVER_GUIDE.md`를 참고하세요.
+
 ## 환경 변수 설정
 
 ### 필수 설정

@@ -56,6 +56,36 @@ nginx/
 
 3. **자동 관리**: 스크립트를 통해 서비스 추가/제거 자동화
 
+## 인프라 관리 스크립트
+
+### 빠른 재시작 (1-2초 다운타임)
+```bash
+./quick-restart.sh
+```
+
+### 완전 재시작 (옵션 포함)
+```bash
+# 기본 재시작
+./restart-infrastructure.sh
+
+# 이미지 재빌드 후 시작
+./restart-infrastructure.sh --rebuild
+
+# 빠른 재시작 (재빌드 없음)
+./restart-infrastructure.sh --quick
+
+# 확인 없이 강제 실행
+./restart-infrastructure.sh --force
+
+# 도움말
+./restart-infrastructure.sh --help
+```
+
+### 테스트 → 프로덕션 전환
+```bash
+./switch-to-production.sh
+```
+
 ## 환경 변수 설정
 
 ### 필수 설정

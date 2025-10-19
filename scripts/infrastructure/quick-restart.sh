@@ -14,6 +14,8 @@ if [ ! -f "$PROJECT_ROOT/infrastructure/docker-compose.prod.yml" ]; then
     echo "nginx 프로젝트 루트에서 실행해주세요."
     echo "현재 경로: $(pwd)"
     echo "찾은 프로젝트 루트: $PROJECT_ROOT"
+    echo "infrastructure 폴더 내용:"
+    ls -la "$PROJECT_ROOT/infrastructure/" 2>/dev/null || echo "infrastructure 폴더가 없습니다."
     exit 1
 fi
 

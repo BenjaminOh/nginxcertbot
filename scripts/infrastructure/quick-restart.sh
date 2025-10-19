@@ -5,6 +5,10 @@
 
 set -e
 
+# 스크립트가 실행되는 디렉토리를 기준으로 프로젝트 루트 경로 설정
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+PROJECT_ROOT=$(dirname "$(dirname "$SCRIPT_DIR")")
+
 # 색상 정의
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -19,7 +23,7 @@ log_warn() {
 }
 
 # 현재 디렉토리 확인
-if [ ! -f "../infrastructure/docker-compose.prod.yml" ]; then
+if [ ! -f "../$PROJECT_ROOT/infrastructure/docker-compose.prod.yml" ]; then
     echo "nginx 프로젝트 루트에서 실행해주세요."
     exit 1
 fi

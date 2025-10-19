@@ -5,6 +5,10 @@
 
 set -e
 
+# 스크립트가 실행되는 디렉토리를 기준으로 프로젝트 루트 경로 설정
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+PROJECT_ROOT=$(dirname "$(dirname "$SCRIPT_DIR")")
+
 # 색상 정의
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -55,7 +59,7 @@ log_info "도메인: $DOMAIN"
 log_info "포트: $PORT"
 
 # 현재 디렉토리 확인
-if [ ! -f "../../../../infrastructure/docker-compose.prod.yml" ]; then
+if [ ! -f "../../$PROJECT_ROOT/infrastructure/docker-compose.prod.yml" ]; then
     log_error "nginx 프로젝트 루트에서 실행해주세요."
     exit 1
 fi
@@ -65,7 +69,7 @@ log_info "nginx 서버 설정 파일 생성 중..."
 
 case $SERVICE_TYPE in
     nextjs)
-        cat > "../../nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
+        cat > "$PROJECT_ROOT/nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
 # HTTP 서버 블록 - ${DOMAIN}
 server {
     listen 80;
@@ -114,7 +118,7 @@ server {
 EOF
         ;;
     nodejs)
-        cat > "../../nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
+        cat > "$PROJECT_ROOT/nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
 # HTTP 서버 블록 - ${DOMAIN}
 server {
     listen 80;
@@ -171,7 +175,7 @@ server {
 EOF
         ;;
     wordpress)
-        cat > "../../nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
+        cat > "$PROJECT_ROOT/nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
 # HTTP 서버 블록 - ${DOMAIN}
 server {
     listen 80;
@@ -223,22 +227,22 @@ esac
 log_info "업스트림 설정 추가 중..."
 
 # 업스트림 설정이 이미 있는지 확인
-if grep -q "upstream ${SERVICE_NAME}" ../../nginx/conf.d/upstreams.conf; then
+if grep -q "upstream ${SERVICE_NAME}" $PROJECT_ROOT/nginx/conf.d/upstreams.conf; then
     log_warn "업스트림 설정이 이미 존재합니다: ${SERVICE_NAME}"
 else
-    echo "" >> ../../nginx/conf.d/upstreams.conf
-    echo "upstream ${SERVICE_NAME} {" >> ../../nginx/conf.d/upstreams.conf
-    echo "    server ${SERVICE_NAME}:${PORT};" >> ../../nginx/conf.d/upstreams.conf
-    echo "}" >> ../../nginx/conf.d/upstreams.conf
+    echo "" >> $PROJECT_ROOT/nginx/conf.d/upstreams.conf
+    echo "upstream ${SERVICE_NAME} {" >> $PROJECT_ROOT/nginx/conf.d/upstreams.conf
+    echo "    server ${SERVICE_NAME}:${PORT};" >> $PROJECT_ROOT/nginx/conf.d/upstreams.conf
+    echo "}" >> $PROJECT_ROOT/nginx/conf.d/upstreams.conf
 fi
 
 # 3. 환경 변수 파일 업데이트
 log_info "환경 변수 파일 업데이트 중..."
 
-if [ -f "../../infrastructure/.env" ]; then
+if [ -f "$PROJECT_ROOT/infrastructure/.env" ]; then
     # CERTBOT_DOMAIN에 새 도메인 추가
-    if ! grep -q "${DOMAIN}" ../../infrastructure/.env; then
-        sed -i.bak "s/CERTBOT_DOMAIN=.*/CERTBOT_DOMAIN=${CERTBOT_DOMAIN},${DOMAIN}/" ../../infrastructure/.env
+    if ! grep -q "${DOMAIN}" $PROJECT_ROOT/infrastructure/.env; then
+        sed -i.bak "s/CERTBOT_DOMAIN=.*/CERTBOT_DOMAIN=${CERTBOT_DOMAIN},${DOMAIN}/" $PROJECT_ROOT/infrastructure/.env
         log_info "환경 변수 파일에 도메인 추가됨: ${DOMAIN}"
     fi
 else
@@ -247,7 +251,7 @@ fi
 
 # 4. nginx 설정 테스트
 log_info "nginx 설정 테스트 중..."
-if docker compose -f ../../infrastructure/docker-compose.prod.yml exec nginx nginx -t 2>/dev/null; then
+if docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml exec nginx nginx -t 2>/dev/null; then
     log_info "nginx 설정이 유효합니다."
 else
     log_warn "nginx 컨테이너가 실행 중이지 않습니다. 나중에 테스트해주세요."
@@ -259,14 +263,14 @@ log_info "도메인: ${DOMAIN}"
 
 # nginx 재시작 (새 설정 적용)
 log_info "nginx 재시작 중..."
-docker compose -f ../../infrastructure/docker-compose.prod.yml restart nginx
+docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml restart nginx
 
 # 잠시 대기 (nginx 시작 대기)
 sleep 5
 
 # SSL 인증서 발급
 log_info "Let's Encrypt 인증서 발급 시도 중..."
-if docker compose -f ../../infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly \
+if docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
     --email admin@${DOMAIN} \
@@ -278,14 +282,14 @@ if docker compose -f ../../infrastructure/docker-compose.prod.yml run --rm certb
     
     # nginx 재시작 (SSL 인증서 적용)
     log_info "SSL 인증서 적용을 위해 nginx 재시작 중..."
-    docker compose -f ../../infrastructure/docker-compose.prod.yml restart nginx
+    docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml restart nginx
     
     log_info "웹서비스 추가 완료!"
     log_info "도메인 접속 테스트: https://${DOMAIN}"
 else
     log_error "SSL 인증서 발급 실패: ${DOMAIN}"
     log_warn "수동으로 인증서를 발급해주세요:"
-    log_warn "docker compose -f ../../infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly --webroot --webroot-path=/var/www/certbot --email admin@${DOMAIN} --agree-tos --no-eff-email -d ${DOMAIN}"
+    log_warn "docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly --webroot --webroot-path=/var/www/certbot --email admin@${DOMAIN} --agree-tos --no-eff-email -d ${DOMAIN}"
 fi
 
 log_info "다음 단계:"

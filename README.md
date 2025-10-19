@@ -72,19 +72,19 @@ nginx/
 ### 완전 재시작 (옵션 포함)
 ```bash
 # 기본 재시작
-./scripts/restart-infrastructure.sh
+./scripts/infrastructure/quick-restart.sh
 
 # 이미지 재빌드 후 시작
-./scripts/restart-infrastructure.sh --rebuild
+./scripts/infrastructure/quick-restart.sh --rebuild
 
 # 빠른 재시작 (재빌드 없음)
-./scripts/restart-infrastructure.sh --quick
+./scripts/infrastructure/quick-restart.sh --quick
 
 # 확인 없이 강제 실행
-./scripts/restart-infrastructure.sh --force
+./scripts/infrastructure/quick-restart.sh --force
 
 # 도움말
-./scripts/restart-infrastructure.sh --help
+./scripts/infrastructure/quick-restart.sh --help
 ```
 
 ### 테스트 → 프로덕션 전환

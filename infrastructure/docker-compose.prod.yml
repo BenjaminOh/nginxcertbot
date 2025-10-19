@@ -22,7 +22,7 @@ services:
       - nginx_logs:/var/log/nginx
     restart: unless-stopped
     networks:
-      - web-services-network
+      - nginx-network
 
   # certbot SSL 인증서 관리
   certbot:
@@ -40,13 +40,13 @@ services:
       - CERTBOT_STAGING=${CERTBOT_STAGING}
     restart: unless-stopped
     networks:
-      - web-services-network
+      - nginx-network
 
 volumes:
   nginx_logs:
     driver: local
 
 networks:
-  web-services-network:
+  nginx-network:
     driver: bridge
     external: false

@@ -253,9 +253,42 @@ else
     log_warn "nginx 컨테이너가 실행 중이지 않습니다. 나중에 테스트해주세요."
 fi
 
-log_info "웹서비스 추가 완료!"
+# 5. SSL 인증서 발급
+log_info "SSL 인증서 발급 중..."
+log_info "도메인: ${DOMAIN}"
+
+# nginx 재시작 (새 설정 적용)
+log_info "nginx 재시작 중..."
+docker compose -f infrastructure/docker-compose.prod.yml restart nginx
+
+# 잠시 대기 (nginx 시작 대기)
+sleep 5
+
+# SSL 인증서 발급
+log_info "Let's Encrypt 인증서 발급 시도 중..."
+if docker compose -f infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly \
+    --webroot \
+    --webroot-path=/var/www/certbot \
+    --email admin@${DOMAIN} \
+    --agree-tos \
+    --no-eff-email \
+    --force-renewal \
+    -d ${DOMAIN}; then
+    log_info "SSL 인증서 발급 성공: ${DOMAIN}"
+    
+    # nginx 재시작 (SSL 인증서 적용)
+    log_info "SSL 인증서 적용을 위해 nginx 재시작 중..."
+    docker compose -f infrastructure/docker-compose.prod.yml restart nginx
+    
+    log_info "웹서비스 추가 완료!"
+    log_info "도메인 접속 테스트: https://${DOMAIN}"
+else
+    log_error "SSL 인증서 발급 실패: ${DOMAIN}"
+    log_warn "수동으로 인증서를 발급해주세요:"
+    log_warn "docker compose -f infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly --webroot --webroot-path=/var/www/certbot --email admin@${DOMAIN} --agree-tos --no-eff-email -d ${DOMAIN}"
+fi
+
 log_info "다음 단계:"
 log_info "1. 웹서비스 프로젝트를 서버에 배포"
 log_info "2. docker-compose.yml에서 네트워크를 'web-services-network'로 설정"
-log_info "3. SSL 인증서 발급: ./certbot/init-letsencrypt.sh"
-log_info "4. nginx 재시작: docker compose -f infrastructure/docker-compose.prod.yml restart nginx"
+log_info "3. 도메인 접속 테스트: https://${DOMAIN}"

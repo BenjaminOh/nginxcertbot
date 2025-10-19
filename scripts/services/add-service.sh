@@ -67,6 +67,12 @@ fi
 # 1. nginx 서버 설정 파일 생성
 log_info "nginx 서버 설정 파일 생성 중..."
 
+# servers 폴더가 없으면 생성
+if [ ! -d "$PROJECT_ROOT/nginx/conf.d/servers" ]; then
+    log_info "servers 폴더 생성 중..."
+    mkdir -p "$PROJECT_ROOT/nginx/conf.d/servers"
+fi
+
 case $SERVICE_TYPE in
     nextjs)
         cat > "$PROJECT_ROOT/nginx/conf.d/servers/${SERVICE_NAME}.conf" << EOF
@@ -270,7 +276,7 @@ sleep 5
 
 # SSL 인증서 발급
 log_info "Let's Encrypt 인증서 발급 시도 중..."
-if docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml run --rm certbot certbot certonly \
+if docker compose -f $PROJECT_ROOT/infrastructure/docker-compose.prod.yml run --rm certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
     --email admin@${DOMAIN} \

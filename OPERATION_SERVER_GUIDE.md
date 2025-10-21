@@ -13,8 +13,8 @@ aphennet-mariadb:3306   # MariaDB
 ### 목표
 ```bash
 # nginx 인프라 추가 후
-https://aphennet.likeweb.co.kr      → aphennet-nextjs:3000
-https://aphennetapi.likeweb.co.kr   → aphennet-nodejs:3001
+https://aphen.net      → aphennet-nextjs:3000
+https://api.aphen.net   → aphennet-nodejs:3001
 ```
 
 ## 🚀 배포 단계
@@ -62,8 +62,8 @@ docker ps
 docker compose -f infrastructure/docker-compose.prod.yml ps
 
 # 웹사이트 접속 테스트
-curl -k https://aphennet.likeweb.co.kr
-curl -k https://aphennetapi.likeweb.co.kr
+curl -k https://aphen.net
+curl -k https://api.aphen.net
 ```
 
 ### 5단계: 프로덕션 전환 (테스트 완료 후)
@@ -121,8 +121,8 @@ docker compose -f infrastructure/docker-compose.prod.yml run --rm certbot certon
 
 ```bash
 # 외부 접속
-https://aphennet.likeweb.co.kr      # Next.js 프론트엔드
-https://aphennetapi.likeweb.co.kr   # Node.js API
+https://aphen.net      # Next.js 프론트엔드
+https://api.aphen.net   # Node.js API
 
 # 내부 통신
 nginx → aphennet-nextjs:3000

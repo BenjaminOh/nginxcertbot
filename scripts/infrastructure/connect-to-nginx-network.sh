@@ -73,5 +73,5 @@ docker compose -f ../infrastructure/docker-compose.prod.yml ps
 
 log_success "기존 서비스 연결 완료!"
 log_info "이제 다음 도메인으로 접속할 수 있습니다:"
-log_info "- https://aphennet.likeweb.co.kr (Next.js 프론트엔드)"
-log_info "- https://aphennetapi.likeweb.co.kr (Node.js API)"
+log_info "- https://aphen.net (Next.js 프론트엔드)"
+log_info "- https://api.aphen.net (Node.js API)"

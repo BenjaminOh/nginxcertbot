@@ -145,7 +145,7 @@ docker compose -f ../infrastructure/docker-compose.prod.yml ps
 
 log_info "다음 단계:"
 log_info "1. 웹사이트 접속하여 서비스 확인:"
-log_info "   - https://aphennet.likeweb.co.kr (Next.js)"
-log_info "   - https://aphennetapi.likeweb.co.kr (Node.js API)"
+log_info "   - https://aphen.net (Next.js)"
+log_info "   - https://api.aphen.net (Node.js API)"
 log_info "2. SSL 인증서 상태 확인"
 log_info "3. 로그 확인: docker compose -f ../infrastructure/docker-compose.prod.yml logs -f"

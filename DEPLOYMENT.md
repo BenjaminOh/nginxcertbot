@@ -125,8 +125,8 @@ docker compose -f docker-compose.prod.yml exec nginx nginx -s reload
 ## 모니터링
 
 ### 헬스체크
-- API 헬스체크: `https://aphennetapi.likeweb.co.kr/health`
-- 프론트엔드: `https://aphennet.likeweb.co.kr`
+- API 헬스체크: `https://api.aphen.net/health`
+- 프론트엔드: `https://aphen.net`
 
 ### 로그 모니터링
 ```bash
